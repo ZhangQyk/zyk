@@ -82,21 +82,6 @@
 		    margin-top: 2px;
 		}
 		
-		.right{
-		    width:260px;
-		    display:flex;
-		    flex-direction:column;
-		    align-items:center;
-		    background:rgba(0,0,0,.35);
-		    border-radius:12px;
-		    padding:20px;
-		}
-		.player{display:flex;align-items:center;gap:12px;}
-		.player button{background:none;border:0;color:#fff;font-size:32px;cursor:pointer;outline:none;}
-		.progress{display:flex;align-items:center;gap:6px;width:100%;margin-top:10px;}
-		.progress input[type=range]{flex:1;height:4px;background:#666;border-radius:2px;outline:none;cursor:pointer;}
-		.progress span{font-size:14px;width:44px;text-align:center;}
-		
 		.bottom{
 		    position:absolute;
 		    left:50%;
@@ -169,20 +154,6 @@
 				</div>
 			</div>
 		</div>
-
-		<!-- 右侧播放器 -->
-		<div class="right">
-			<div class="player">
-				<button id="prevBtn" title="上一首">⏮</button>
-				<button id="playBtn" title="播放/暂停">▶</button>
-				<button id="nextBtn" title="下一首">⏭</button>
-			</div>
-			<div class="progress">
-				<span id="currentTime">0:00</span>
-				<input type="range" id="progressBar" value="0" step="0.1" min="0" max="100">
-				<span id="duration">0:00</span>
-			</div>
-		</div>
 	</div>
 
 	<div class="bottom">
@@ -191,8 +162,6 @@
 		<a href="https://github.com/ZhangQyk" target="_blank" rel="noopener">GitHub</a>
 			<a href="https://qm.qq.com/cgi-bin/qm/qr?k=Cgn8JDSoW7AC96H-zocTiakdOwsw96vR" target="_blank" rel="noopener">QQ</a>
 	</div>
-
-	<audio id="audio" preload="metadata"></audio>
 
 	<script>
 		/* 背景直接加载 */
@@ -213,33 +182,6 @@
 		}
 		loadHitokoto();
 		setInterval(loadHitokoto, 10000);
-		
-		/* 播放器 */
-		const audio = document.getElementById('audio');
-		const playBtn = document.getElementById('playBtn');
-		const bar = document.getElementById('progressBar');
-		const curTime = document.getElementById('currentTime');
-		const durTime = document.getElementById('duration');
-		
-		async function loadSong() {
-		    try {
-		        const d = await (await fetch('https://api.uomg.com/api/rand.music?format=json')).json();
-		        audio.src = d.data.url;
-		        audio.play().catch(() => {});
-		    } catch {
-		        setTimeout(loadSong, 1000);
-		    }
-		}
-		function format(t) { const m = Math.floor(t / 60), s = Math.floor(t % 60).toString().padStart(2, '0'); return `${m}:${s}`; }
-		function togglePlay() { audio.paused ? (audio.play(), playBtn.textContent = '⏸') : (audio.pause(), playBtn.textContent = '▶'); }
-		function updateBar() { bar.value = (audio.currentTime / audio.duration) * 100 || 0; curTime.textContent = format(audio.currentTime); }
-		bar.addEventListener('input', () => audio.currentTime = (bar.value / 100) * audio.duration);
-		audio.addEventListener('loadedmetadata', () => durTime.textContent = format(audio.duration));
-		audio.addEventListener('timeupdate', updateBar);
-		audio.addEventListener('ended', loadSong);
-		
-		playBtn.onclick = togglePlay;
-		loadSong();
 		
 		/* 时间胶囊 */
 		function updateTimeCapsule() {
