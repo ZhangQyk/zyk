@@ -1,238 +1,532 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
-
 <head>
-	<meta charset="UTF-8" />
-	<meta name="viewport" content="width=1200,user-scalable=no" />
-	<title>秋枫的博客</title>
-	<style>
-		html,body{height:100%;margin:0;color:#fff;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif;overflow:hidden;}
-		.bg{position:fixed;top:0;left:0;width:100%;height:100%;background-size:cover;background-position:center;z-index:-1;}
-		.overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:0;}
-		
-		/* 电脑视图：Flex 居中，左右间距 6vw */
-		.main{
-		    position:absolute;
-		    top:0;left:0;
-		    width:100%;height:100%;
-		    display:flex;
-		    align-items:center;
-		    justify-content:center;
-		    gap:6vw;
-		}
-		.left{
-		    max-width:700px;
-		    max-height:70vh;
-		    padding:2vh 2vw;
-		    overflow-y:auto;
-		    word-break:break-word;
-		}
-		.left h1{font-size:clamp(2rem,3vw,3rem);margin-bottom:.4em;text-shadow:0 2px 10px rgba(0,0,0,.5);}
-		#hitokoto{font-size:clamp(1.1rem,1.6vw,1.5rem);}
-		.quote{
-		    font-size:clamp(1.6rem,2.4vw,2.4rem);
-		    font-weight:600;
-		    line-height:1.3;
-		    color:#ffd;
-		    text-shadow:0 2px 8px rgba(0,0,0,.6);
-		}
-		
-		/* 时间胶囊样式 */
-		.time-capsule {
-		    margin-top: 30px;
-		    padding: 20px;
-		    background: rgba(0,0,0,.35);
-		    border-radius: 12px;
-		    backdrop-filter: blur(10px);
-		}
-		.time-capsule h3 {
-		    margin-top: 0;
-		    margin-bottom: 15px;
-		    font-size: 1.2rem;
-		    color: #ffd;
-		    text-shadow: 0 1px 3px rgba(0,0,0,.5);
-		}
-		.time-item {
-		    margin-bottom: 12px;
-		}
-		.time-item label {
-		    display: block;
-		    margin-bottom: 4px;
-		    font-size: 0.9rem;
-		    color: #ddd;
-		}
-		.progress-bar {
-		    width: 100%;
-		    height: 6px;
-		    background: rgba(255,255,255,.2);
-		    border-radius: 3px;
-		    overflow: hidden;
-		}
-		.progress-fill {
-		    height: 100%;
-		    background: linear-gradient(90deg, #4facfe, #00f2fe);
-		    border-radius: 3px;
-		    transition: width 0.5s ease;
-		}
-		.time-info {
-		    display: flex;
-		    justify-content: space-between;
-		    font-size: 0.8rem;
-		    color: #bbb;
-		    margin-top: 2px;
-		}
-		
-		.bottom{
-		    position:absolute;
-		    left:50%;
-		    bottom:30px;
-		    transform:translateX(-50%);
-		    display:flex;
-		    gap:30px;
-		}
-		.bottom a{
-		    padding:12px 28px;
-		    border:1px solid #fff;
-		    border-radius:25px;
-		    text-decoration:none;
-		    color:#fff;
-		    font-size:16px;
-		    transition:.3s;
-		}
-		.bottom a:hover{background:#fff;color:#111;}
-	</style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>我的个人博客</title>
+<style>
+:root {
+  --bg-color: #fff;
+  --text-color: #333;
+  --link-color: #06c;
+  --border-color: #e0e0e0;
+  --code-bg: #f5f5f5;
+  --shadow: 0 2px 8px rgba(0,0,0,.1);
+}
+[data-theme="dark"] {
+  --bg-color: #1a1a1a;
+  --text-color: #e0e0e0;
+  --link-color: #66b3ff;
+  --border-color: #404040;
+  --code-bg: #2d2d2d;
+  --shadow: 0 2px 8px rgba(0,0,0,.3);
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  background: var(--bg-color); color: var(--text-color); line-height: 1.6; transition: background .3s, color .3s;
+}
+.container { max-width: 800px; margin: 0 auto; padding: 0 20px; }
+header { padding: 2rem 0; border-bottom: 1px solid var(--border-color); margin-bottom: 2rem; }
+nav { display: flex; justify-content: space-between; align-items: center; }
+.logo { font-size: 1.5rem; font-weight: bold; text-decoration: none; color: var(--text-color); }
+.nav-links { display: flex; gap: 2rem; align-items: center; }
+.nav-links a { text-decoration: none; color: var(--text-color); transition: color .3s; }
+.nav-links a:hover { color: var(--link-color); }
+.theme-toggle {
+  background: none; border: 1px solid var(--border-color); border-radius: 20px;
+  padding: .5rem 1rem; cursor: pointer; color: var(--text-color); transition: all .3s;
+}
+.theme-toggle:hover { border-color: var(--link-color); color: var(--link-color); }
+.search-box { margin-bottom: 2rem; }
+.search-box input {
+  width: 100%; padding: .8rem; border: 1px solid var(--border-color); border-radius: 8px;
+  background: var(--bg-color); color: var(--text-color); font-size: 1rem;
+}
+.post-list { display: flex; flex-direction: column; gap: 2rem; }
+.post-item {
+  padding: 1.5rem; border: 1px solid var(--border-color); border-radius: 8px; transition: box-shadow .3s;
+}
+.post-item:hover { box-shadow: var(--shadow); }
+.post-title { font-size: 1.5rem; margin-bottom: .5rem; }
+.post-title a { text-decoration: none; color: var(--text-color); }
+.post-title a:hover { color: var(--link-color); }
+.post-meta { color: #888; font-size: .9rem; margin-bottom: 1rem; }
+.post-excerpt { color: #666; line-height: 1.8; }
+.post-content { line-height: 1.8; }
+.post-content h1, .post-content h2, .post-content h3 { margin: 1.5rem 0 1rem; }
+.post-content p { margin-bottom: 1rem; }
+.post-content img { max-width: 100%; height: auto; display: block; margin: 1rem 0; }
+.post-content blockquote {
+  padding: 0 1rem; margin: 1rem 0; border-left: 4px solid var(--border-color); color: #888;
+}
+.about-section { text-align: center; padding: 3rem 0; }
+.avatar { width: 150px; height: 150px; border-radius: 50%; margin-bottom: 2rem; border: 3px solid var(--border-color); }
+.social-links { display: flex; gap: 1rem; justify-content: center; margin-top: 2rem; }
+.social-links a {
+  display: inline-block; padding: .5rem 1rem; border: 1px solid var(--border-color);
+  border-radius: 20px; text-decoration: none; color: var(--text-color); transition: all .3s;
+}
+.social-links a:hover { border-color: var(--link-color); color: var(--link-color); }
+footer { text-align: center; padding: 2rem 0; margin-top: 4rem; border-top: 1px solid var(--border-color); color: #888; }
+.hidden { display: none; }
+
+/* ===== 返回首页按钮 ===== */
+.back-home {
+  display: inline-flex;
+  align-items: center;
+  gap: .3em;
+  margin-top: 2.5rem;
+  padding: .55em 1.1em;
+  font-size: .95rem;
+  color: var(--link-color);
+  background: transparent;
+  border: 1px solid var(--border-color);
+  border-radius: 20px;
+  cursor: pointer;
+  transition: all .25s ease;
+}
+.back-home:hover {
+  background: var(--link-color);
+  color: #fff;
+  border-color: var(--link-color);
+  transform: translateY(-2px);
+}
+[data-theme="dark"] .back-home:hover {
+  filter: brightness(1.15);
+}
+
+@media (max-width: 600px) { .nav-links { gap: 1rem; } .post-title { font-size: 1.2rem; } }
+</style>
 </head>
-
 <body>
-	<div class="bg" id="bg"></div>
-	<div class="overlay"></div>
 
-	<div class="main">
-		<!-- 左侧文字区（可滚动） -->
-		<div class="left">
-			<h1>秋枫Mod</h1>
-			<p id="hitokoto">正在加载一言…</p>
-			<div class="quote">
-				哪有顷刻之间的心灰意冷，有的，只是日积月累的看透罢了。
-			</div>
+<header>
+  <nav class="container">
+    <a href="#" class="logo">我的博客</a>
+    <div class="nav-links">
+      <a href="#" onclick="showPage('home')">首页</a>
+      <a href="#" onclick="showPage('about')">关于</a>
+      <button class="theme-toggle" onclick="toggleTheme()">🌓 切换主题</button>
+    </div>
+  </nav>
+</header>
 
-			<!-- 时间胶囊 -->
-			<div class="time-capsule">
-				<h3>时间胶囊</h3>
+<main class="container">
+  <!-- 首页 -->
+  <div id="home-page">
+    <div class="search-box">
+      <input type="text" id="searchInput" placeholder="搜索文章..." onkeyup="searchPosts()">
+    </div>
+    <div class="post-list" id="postList"></div>
+  </div>
 
-				<div class="time-item">
-					<label>今日进度</label>
-					<div class="progress-bar">
-						<div class="progress-fill" id="dayProgress"></div>
-					</div>
-					<div class="time-info">
-						<span id="dayElapsed">已度过 0%</span>
-						<span id="dayRemaining">还剩 00:00:00</span>
-					</div>
-				</div>
+  <!-- 文章详情 -->
+  <div id="post-page" class="hidden">
+    <article class="post-content" id="postContent"></article>
+    <button class="back-home" onclick="showPage('home')">← 返回首页</button>
+  </div>
 
-				<div class="time-item">
-					<label>本月进度</label>
-					<div class="progress-bar">
-						<div class="progress-fill" id="monthProgress"></div>
-					</div>
-					<div class="time-info">
-						<span id="monthElapsed">已度过 0%</span>
-						<span id="monthRemaining">还剩 0 天</span>
-					</div>
-				</div>
+  <!-- 关于 -->
+  <div id="about-page" class="hidden">
+    <section class="about-section">
+      <img src="https://via.placeholder.com/150" alt="头像" class="avatar">
+      <h1>关于我</h1>
+      <p>欢迎来到我的个人博客！</p>
+      <p>这里记录着我的学习笔记、技术思考和生活感悟。</p>
+      <p>热爱编程，喜欢分享，希望我的文字能给你带来一些启发。</p>
+      <div class="social-links">
+        <a href="#">GitHub</a>
+        <a href="#">Twitter</a>
+        <a href="#">邮箱</a>
+      </div>
+    </section>
+  </div>
+</main>
 
-				<div class="time-item">
-					<label>今年进度</label>
-					<div class="progress-bar">
-						<div class="progress-fill" id="yearProgress"></div>
-					</div>
-					<div class="time-info">
-						<span id="yearElapsed">已度过 0%</span>
-						<span id="yearRemaining">还剩 0 天</span>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
+<footer>
+  <p>&copy; 2024 我的博客. All rights reserved.</p>
+</footer>
 
-	<div class="bottom">
-		<a href="https://space.bilibili.com/3546628455664136" target="_blank" rel="noopener">哔哩哔哩</a>
-		<a href="https://bbs.binmt.cc/home.php?mod=space&uid=140217&do=profile" target="_blank" rel="noopener">MT论坛</a>
-		<a href="https://github.com/ZhangQyk" target="_blank" rel="noopener">GitHub</a>
-			<a href="https://qm.qq.com/cgi-bin/qm/qr?k=Cgn8JDSoW7AC96H-zocTiakdOwsw96vR" target="_blank" rel="noopener">QQ</a>
-	</div>
+<!-- 文章数据源 -->
+<textarea id="articlesData" class="hidden">
+置顶：否
+日期：2025-11-16
+标题：说说UC网盘那些事
+简介：对于UC网盘限速的一些看法
+正文：
+[size=6]UC网盘限速的一些看法及我都解决方法[/size]
+[quote]在2025年9月29后，UC网盘正式对非会员用户实施限速措施，虽官方并且公告声明，但是"不限速"这一政策早已名存实亡。[/quote]
+[b]UC网盘在2024年3月28日曾官宣"上传、下载不限速"，承诺非会员与会员速度一致。[/b]
 
-	<script>
-		/* 背景直接加载 */
-		const bgEl = document.getElementById('bg');
-		(new Image()).src = 'https://imgapi.xl0408.top/';
-		bgEl.style.backgroundImage = `url('https://imgapi.xl0408.top/')`;
-		
-		/* 一言 */
-		const hitEl = document.getElementById('hitokoto');
-		const defaultHit = '愿你走出半生，归来仍是少年。';
-		async function loadHitokoto() {
-		    try {
-		        const d = await (await fetch('https://international.v1.hitokoto.cn/?encode=json')).json();
-		        hitEl.innerHTML = `${d.hitokoto}<br><small>—— ${d.from_who || ''}《${d.from}》</small>`;
-		    } catch {
-		        hitEl.innerHTML = defaultHit;
-		    }
-		}
-		loadHitokoto();
-		setInterval(loadHitokoto, 10000);
-		
-		/* 时间胶囊 */
-		function updateTimeCapsule() {
-		    const now = new Date();
-		    const startOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-		    const endOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
-		    const totalDayMs = endOfDay - startOfDay;
-		    const elapsedDayMs = now - startOfDay;
-		    const dayPercent = (elapsedDayMs / totalDayMs) * 100;
-		    const remainingDayMs = totalDayMs - elapsedDayMs;
-		
-		    const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
-		    const endOfMonth = new Date(now.getFullYear(), now.getMonth() + 1, 1);
-		    const totalMonthMs = endOfMonth - startOfMonth;
-		    const elapsedMonthMs = now - startOfMonth;
-		    const monthPercent = (elapsedMonthMs / totalMonthMs) * 100;
-		    const remainingMonthDays = Math.ceil((endOfMonth - now) / (1000 * 60 * 60 * 24));
-		
-		    const startOfYear = new Date(now.getFullYear(), 0, 1);
-		    const endOfYear = new Date(now.getFullYear() + 1, 0, 1);
-		    const totalYearMs = endOfYear - startOfYear;
-		    const elapsedYearMs = now - startOfYear;
-		    const yearPercent = (elapsedYearMs / totalYearMs) * 100;
-		    const remainingYearDays = Math.ceil((endOfYear - now) / (1000 * 60 * 60 * 24));
-		
-		    // 更新进度条和文字
-		    document.getElementById('dayProgress').style.width = dayPercent.toFixed(2) + '%';
-		    document.getElementById('dayElapsed').textContent = `已度过 ${dayPercent.toFixed(2)}%`;
-		    document.getElementById('dayRemaining').textContent = `还剩 ${formatTime(remainingDayMs)}`;
-		
-		    document.getElementById('monthProgress').style.width = monthPercent.toFixed(2) + '%';
-		    document.getElementById('monthElapsed').textContent = `已度过 ${monthPercent.toFixed(2)}%`;
-		    document.getElementById('monthRemaining').textContent = `还剩 ${remainingMonthDays} 天`;
-		
-		    document.getElementById('yearProgress').style.width = yearPercent.toFixed(2) + '%';
-		    document.getElementById('yearElapsed').textContent = `已度过 ${yearPercent.toFixed(2)}%`;
-		    document.getElementById('yearRemaining').textContent = `还剩 ${remainingYearDays} 天`;
-		}
-		
-		function formatTime(ms) {
-		    const totalSeconds = Math.floor(ms / 1000);
-		    const hours = Math.floor(totalSeconds / 3600).toString().padStart(2, '0');
-		    const minutes = Math.floor((totalSeconds % 3600) / 60).toString().padStart(2, '0');
-		    const seconds = (totalSeconds % 60).toString().padStart(2, '0');
-		    return `${hours}:${minutes}:${seconds}`;
-		}
-		
-		// 初始化并每秒更新一次
-		updateTimeCapsule();
-		setInterval(updateTimeCapsule, 1000);
-	</script>
+但在2025年9月29后，UC网盘正式对非会员用户实施限速措施，虽官方并且公告声明，但是"不限速"这一政策早已名存实亡。
+[img]https://icdn.binmt.cc/2511/6919cd69217a4.jpg[/img]
+
+这对大部分用户产生了影响，但是官方并没有解释什么
+
+可能是资金不足，又或者是其他问题。当然，这与我们没什么关系，我们要关心的事只有能不能不限速下载。（所以才有了这篇内容）
+___________________________________
+
+这里是正文了
+
+[u]虽然UC对非会员用户做了下载速度限制，但是实际上并没有完全实施这个限制[/u]
+
+众所周知，UC的域名是[color=#ff0000]drive.uc.cn[/color]，但是很少人知道UC还有一个子域名
+
+[size=4][color=#ff0000]fast.uc.cn[/color][/size]
+
+这是UC的文件传输中心，用于快捷传输文件使用。
+但是它的作用不仅仅是用户间传输文件，还有下载文件。
+
+经过测试发现，如果把文件分享链接
+[u]https://drive.uc.cn/s/d357b8f5f76f4?public=1#/list/share[/u]中的drive.uc.cn域名换成子域名fast.uc.cn[color=#ff0000]（注意，这里要使用电脑模式）[/color]，网盘文件就会以文件传输的方式出现并且可以直接在网页端下载。
+[img]https://icdn.binmt.cc/2511/6919d2635a354.jpg[/img]
+
+然而还是下载很慢
+[img]https://icdn.binmt.cc/2511/6919d2798516d.jpg[/img]
+
+不过如果没用我怎么会写这篇文章呢？
+
+是的，我们可以使用多线程下载器进行下载
+Android端比较推荐的多线程下载器是1DM+、ADM
+
+下面以1DM+为例，下载速度实测可达到5MB，不过受测试网络的影响，这还不是最高速度。
+[img]https://icdn.binmt.cc/2511/6919d3ba0897d.jpg[/img]
+[color=#ff0000]理论上最高可达15MB/S[/color]
+
+现在方法已经有了，但是作为懒人的我是不会每个分享链接都挨个去修改域名的
+
+所以我想到了油猴
+[quote]油猴（Tampermonkey）是一款浏览器扩展，允许用户编写和运行自定义脚本来修改网页的行为和样式。用户可以使用油猴来自定义网页，例如添加自己的功能、过滤广告、修改布局等。[/quote]
+
+是不是可以写一个油猴使识别到域名是drive.uc.cn就自动替换成fast.uc.cn呢？
+
+于是以下脚本应运而生「[url=https://www.123684.com/s/hPm7jv-XNk63]点击获取[/url]」
+[code]// ==UserScript==
+// @name         UC加速
+// @namespace    https://qm.qq.com/cgi-bin/qm/qr?k=Cgn8JDSoW7AC96H-zocTiakdOwsw96vR
+// @version      0.3.7
+// @description  利用UC网盘的一个不是BUG的BUG来进行不限速下载。
+// @match        *://drive.uc.cn/*
+// @match        *://fast.uc.cn/*
+// @grant        none
+// @author       秋枫
+// ==/UserScript==
+
+(function () {
+    'use strict';
+
+    /* ====== 通用弹窗组件 ====== */
+    function createModal({
+        titleText = '提示',
+        htmlContent = '',
+        confirmText = '确定',
+        inputPlaceholder = '',
+        needInput = false,
+        onConfirm
+    }) {
+        const overlay = document.createElement('div');
+        overlay.style.cssText = `
+            position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:99999;
+            display:flex;align-items:center;justify-content:center;
+        `;
+
+        const box = document.createElement('div');
+        box.style.cssText = `
+            background:#fff;border-radius:6px;padding:24px 32px;width:360px;
+            box-shadow:0 8px 24px rgba(0,0,0,.3);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto;
+        `;
+
+        const title = document.createElement('div');
+        title.textContent = titleText;
+        title.style.cssText = 'font-size:18px;font-weight:bold;margin-bottom:12px;';
+
+        const content = document.createElement('div');
+        content.innerHTML = htmlContent;
+        content.style.cssText = 'font-size:14px;color:#333;margin-bottom:16px;line-height:1.5;';
+
+        box.appendChild(title);
+        box.appendChild(content);
+
+        let input;
+        if (needInput) {
+            input = document.createElement('input');
+            input.type = 'text';
+            input.placeholder = inputPlaceholder;
+            input.style.cssText = 'width:100%;padding:8px 10px;border:1px solid #bbb;border-radius:4px;margin-bottom:16px;';
+            box.appendChild(input);
+        }
+
+        const btn = document.createElement('button');
+        btn.textContent = confirmText;
+        btn.style.cssText = `
+            width:100%;padding:10px 0;border:none;border-radius:4px;
+            background:#007bff;color:#fff;font-size:15px;cursor:pointer;
+        `;
+        btn.onclick = () => {
+            if (needInput && input.value.trim() !== inputPlaceholder) {
+                alert('输入内容不正确，请重新输入！');
+                input.focus();
+                return;
+            }
+            document.body.removeChild(overlay);
+            onConfirm && onConfirm();
+        };
+
+        box.appendChild(btn);
+        overlay.appendChild(box);
+        document.body.appendChild(overlay);
+        if (needInput) input.focus();
+    }
+
+    /* ====== 主流程 ====== */
+    if (location.hostname === 'drive.uc.cn') {
+        if (!localStorage.getItem('_uc_first_agree')) {
+            createModal({
+                titleText: '使用须知 | Mod By 秋枫',
+                htmlContent: `
+                    长按复制访问更多资源：：<a id="uc-res-link" href="javascript:;"
+                    style="color:#007bff;text-decoration:underline;"
+                    title="长按复制">https://zyk.netlify.app</a><br><br>
+                    谨遵法律规定，软件仅供用户交流学习与研究使用，版权归属原版权方所有，版权争议与本人（秋枫）无关，用户本人下载后不能用作商业或非法用途，需在24小时之内删除，否则后果均由用户承担责任。输入“我已知晓并同意”继续。
+                `,
+                confirmText: '确定',
+                needInput: true,
+                inputPlaceholder: '我已知晓并同意',
+                onConfirm: () => {
+                    bindLongPress();          // 仅绑定长按复制
+                    localStorage.setItem('_uc_first_agree', '1');
+                    location.replace(location.href.replace('drive.uc.cn', 'fast.uc.cn'));
+                }
+            });
+            return;
+        } else {
+            location.replace(location.href.replace('drive.uc.cn', 'fast.uc.cn'));
+            return;
+        }
+    }
+
+    if (location.hostname === 'fast.uc.cn') {
+        if (!sessionStorage.getItem('_uc_tip_shown')) {
+            sessionStorage.setItem('_uc_tip_shown', '1');
+            setTimeout(() => {
+                createModal({
+                    titleText: '下载提示',
+                    htmlContent: '请使用多线程下载器（如 IDM、Aria2、Motrix 等）进行下载，以获得最佳速度。<br><br>请在你的下载器/浏览器内登录网页版UC浏览器，否则可能下载失败。',
+                    confirmText: '我知道了'
+                });
+            }, 500);
+        }
+    }
+
+    /* ====== 辅助：统一把链接/请求换成 fast 域名 ====== */
+    document.addEventListener('click', e => {
+        const a = e.target.closest('a');
+        if (a && a.href && a.href.includes('drive.uc.cn')) {
+            e.preventDefault();
+            location.href = a.href.replace('drive.uc.cn', 'fast.uc.cn');
+        }
+    });
+
+    const OriginalXHR = window.XMLHttpRequest;
+    window.XMLHttpRequest = function () {
+        const xhr = new OriginalXHR();
+        const origOpen = xhr.open;
+        xhr.open = function (method, url, ...args) {
+            if (url.includes('drive.uc.cn')) {
+                url = url.replace('drive.uc.cn', 'fast.uc.cn');
+            }
+            return origOpen.call(this, method, url, ...args);
+        };
+        return xhr;
+    };
+
+    /* ====== 长按复制（无弹窗） ====== */
+    function bindLongPress() {
+        const link = document.getElementById('uc-res-link');
+        if (!link) return;
+
+        let pressTimer = null;
+        const cancel = () => { if (pressTimer) clearTimeout(pressTimer); pressTimer = null; };
+
+        const doCopy = () => {
+            const text = link.textContent;
+            if (navigator.clipboard) {
+                navigator.clipboard.writeText(text);
+            } else {
+                const ta = document.createElement('textarea');
+                ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
+                document.body.appendChild(ta); ta.select();
+                document.execCommand('copy'); document.body.removeChild(ta);
+            }
+        };
+
+        /* 仅长按触发 */
+        const LONGPRESS = window.matchMedia('(hover: none)').matches ? 400 : 500;
+        const start = () => { pressTimer = setTimeout(doCopy, LONGPRESS); };
+        link.addEventListener('touchstart', start); link.addEventListener('mousedown', start);
+        link.addEventListener('touchend', cancel);  link.addEventListener('mouseup', cancel);
+        link.addEventListener('touchmove', cancel); link.addEventListener('mouseleave', cancel);
+    }
+})();
+[/code]
+
+[size=7]目的完成，本章完。[/size]
+【________________________________________________________________________________________】
+置顶：是
+日期：2025-11-16
+标题：我的逆向博客搭建完成
+简介：第一篇博客，记录为什么动笔。
+正文：
+[size=6]开始我的逆向博客之旅[/size]
+[quote]欢迎来到我的技术博客！这是我写的第一篇文章，想和大家分享我为什么要开始这个博客。[/quote]
+
+[b]为什么要写博客？[/b]
+
+我说是我闲没事了想建个博客玩你信不ヽ(๏~๏)ﾉ
+
+记录学习过程
+
+分享经验，帮助他人
+（其实就是记录一下日常，所以不会经常去更新。）
+
+
+[b]我会些什么？[/b]
+
+[color=#0066cc][i]Smali[/i][/color]、[color=#0066cc][i]Java[/i][/color]等编程语言的修改（是的，只会修改）；擅长Android端APP的逆向。
+
+接下来是代码块，不过只是展示作用
+[code]// 示例代码
+function hello() {
+    console.log("Hello, World!");
+}[/code]
+
+希望这个博客能记录我的成长，也能帮助到有需要的朋友。
+【________________________________________________________________________________________】
+</textarea>
+
+<script>
+/* ---------- 文章数据 ---------- */
+let posts = [];
+
+document.addEventListener('DOMContentLoaded', () => {
+  const savedTheme = localStorage.getItem('theme') || 'light';
+  document.documentElement.setAttribute('data-theme', savedTheme);
+  const rawText = document.getElementById('articlesData').value;
+  posts = parseArticles(rawText);
+  displayPosts(posts);
+});
+
+/* 解析文章 */
+function parseArticles(text) {
+  const blocks = text.split('【________________________________________________________________________________________】')
+                   .filter(b => b.trim())
+                   .map((block, idx) => {
+                     const date  = (block.match(/日期：(.+)/)   || [, '1970-01-01'])[1].trim();
+                     const title = (block.match(/标题：(.+)/)  || [, '无标题'])[1].trim();
+                     const intro = (block.match(/简介：(.+)/)  || [, ''])[1].trim();
+                     const raw   = (block.match(/正文：([\s\S]+)/) || [, ''])[1].trim();
+                     const top   = (block.match(/置顶：(.+)/)  || [, '否'])[1].trim(); // ★新增
+                     const html  = bbCodeToHtml(raw);
+                     return {
+                       id: idx + 1,
+                       title,
+                       date,
+                       excerpt: intro || raw.slice(0, 60) + (raw.length > 60 ? '…' : ''),
+                       content: `<h1>${title}</h1><p class="post-meta">${date}</p>${html}`,
+                       top: top === '是'   // ★布尔值，方便排序
+                     };
+                   });
+  /* 置顶文章放最前 */
+  return blocks.sort((a, b) => b.top - a.top);
+}
+
+
+/* BBCode → HTML（代码块内不解析标签） */
+function bbCodeToHtml(str) {
+  /* 1. 先把 [code] 整体提出去，用占位符代替 */
+  const codeSlots = [];
+  let tmp = str.replace(/\[code\]([\s\S]*?)\[\/code\]/gi, (_, code) => {
+    const id = `__CODE_${codeSlots.length}__`;
+    codeSlots.push(code);
+    return id;
+  });
+
+  /* 2. 字号 1~7 线性放大，4=标准 */
+  const fontSize = g => 0.625 + parseInt(g, 10) * 0.125;   // 1=0.75  4=1.0  7=1.375
+
+  /* 3. 其余标签 */
+  const rules = [
+    { reg: /\[b\](.*?)\[\/b\]/gis,                    repl: '<strong>$1</strong>' },
+    { reg: /\[i\](.*?)\[\/i\]/gis,                    repl: '<em>$1</em>' },
+    { reg: /\[u\](.*?)\[\/u\]/gis,                    repl: '<span style="text-decoration:underline">$1</span>' },
+    { reg: /\[size=(\d)\](.*?)\[\/size\]/gis,         repl: (_, g, txt) => `<span style="font-size:${fontSize(g)}em">${txt}</span>` },
+    { reg: /\[color=([#\w]+)\](.*?)\[\/color\]/gis,    repl: '<span style="color:$1">$2</span>' },
+    { reg: /\[align=(.*?)\](.*?)\[\/align\]/gis,      repl: '<div style="text-align:$1">$2</div>' },
+    { reg: /\[quote\](.*?)\[\/quote\]/gis,            repl: '<blockquote>$1</blockquote>' },
+    { reg: /\[url=(.*?)\](.*?)\[\/url\]/gis,          repl: '<a href="$1" target="_blank" rel="noreferrer" style="color:#334F67">$2</a>' },
+    { reg: /\[img\](.*?)\[\/img\]/gis,                repl: '<img src="$1" style="max-width:100%;height:auto">' }
+  ];
+  rules.forEach(r => { tmp = tmp.replace(r.reg, r.repl); });
+
+  /* 4. 把代码块放回来 */
+  tmp = tmp.replace(/__CODE_(\d+)__/g, (_, idx) =>
+    `<pre style="background:var(--code-bg);padding:1rem;border-radius:8px;overflow-x:auto"><code>${codeSlots[idx]}</code></pre>`
+  );
+
+  /* 5. 普通段落 */
+  return tmp.split(/\n{2,}/).map(p => `<p>${p.replace(/\n/g, '<br>')}</p>`).join('');
+}
+
+/* 显示文章列表 */
+function displayPosts(list) {
+  const box = document.getElementById('postList');
+  box.innerHTML = '';
+  list.forEach(p => {
+    const div = document.createElement('div');
+    div.className = 'post-item';
+    div.innerHTML = `
+      <h2 class="post-title"><a href="#" onclick="showPost(${p.id})">${p.title}</a></h2>
+      <div class="post-meta">
+      ${p.date} ${p.top ? '<span style="color:#e55;margin-left:.5em">置顶</span>' : ''}
+      </div>
+    <div class="post-excerpt">${p.excerpt}</div>
+`;
+
+    box.appendChild(div);
+  });
+}
+
+/* 显示文章详情 */
+function showPost(id) {
+  const p = posts.find(_ => _.id === id);
+  if (!p) return;
+  document.getElementById('postContent').innerHTML = p.content;
+  showPage('post');
+}
+
+/* 页面切换 */
+function showPage(p) {
+  ['home-page','post-page','about-page'].forEach(i => document.getElementById(i).classList.add('hidden'));
+  document.getElementById(p + '-page').classList.remove('hidden');
+}
+
+/* 搜索 */
+function searchPosts() {
+  const kw = document.getElementById('searchInput').value.trim().toLowerCase();
+  if (!kw) return displayPosts(posts);
+  displayPosts(posts.filter(p =>
+    p.title.toLowerCase().includes(kw) || p.excerpt.toLowerCase().includes(kw)
+  ));
+}
+
+/* 主题切换 */
+function toggleTheme() {
+  const html = document.documentElement;
+  const cur = html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+  html.setAttribute('data-theme', cur);
+  localStorage.setItem('theme', cur);
+}
+</script>
 </body>
-
 </html>
