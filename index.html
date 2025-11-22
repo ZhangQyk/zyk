@@ -4,7 +4,6 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <!-- 网页小图标 -->
   <link rel="icon" href="https://icdn.binmt.cc/2511/6921096ddb77c.png" type="image/jpeg" />
 </head>
 
@@ -302,6 +301,260 @@ Android端比较推荐的多线程下载器是1DM+、ADM
                     style="color:#007bff;text-decoration:underline;"
                     title="长按复制">https:
                     谨遵法律规定，软件仅供用户交流学习与研究使用，版权归属原版权方所有，版权争议与本人（秋枫）无关，用户本人下载后不能用作商业或非法用途，需在24小时之内删除，否则后果均由用户承担责任。输入“我已知晓并同意”继续。
+                `,
+				confirmText: '确定',
+				needInput: true,
+				inputPlaceholder: '我已知晓并同意',
+				onConfirm: () => {
+					bindLongPress();
+					localStorage.setItem('_uc_first_agree', '1');
+					location.replace(location.href.replace('drive.uc.cn', 'fast.uc.cn'));
+				}
+			});
+			return;
+		} else {
+			location.replace(location.href.replace('drive.uc.cn', 'fast.uc.cn'));
+			return;
+		}
+	}
+
+	if (location.hostname === 'fast.uc.cn') {
+		if (!sessionStorage.getItem('_uc_tip_shown')) {
+			sessionStorage.setItem('_uc_tip_shown', '1');
+			setTimeout(() => {
+				createModal({
+					titleText: '下载提示',
+					htmlContent: '请使用多线程下载器（如 IDM、Aria2、Motrix 等）进行下载，以获得最佳速度。<br><br>请在你的下载器
+					confirmText: '我知道了'
+				});
+			}, 500);
+		}
+	}
+
+
+	document.addEventListener('click', e => {
+		const a = e.target.closest('a');
+		if (a && a.href && a.href.includes('drive.uc.cn')) {
+			e.preventDefault();
+			location.href = a.href.replace('drive.uc.cn', 'fast.uc.cn');
+		}
+	});
+
+	const OriginalXHR = window.XMLHttpRequest;
+	window.XMLHttpRequest = function() {
+		const xhr = new OriginalXHR();
+		const origOpen = xhr.open;
+		xhr.open = function(method, url, ...args) {
+			if (url.includes('drive.uc.cn')) {
+				url = url.replace('drive.uc.cn', 'fast.uc.cn');
+			}
+			return origOpen.call(this, method, url, ...args);
+		};
+		return xhr;
+	};
+
+
+	function bindLongPress() {
+		const link = document.getElementById('uc-res-link');
+		if (!link) return;
+
+		let pressTimer = null;
+		const cancel = () => {
+			if (pressTimer) clearTimeout(pressTimer);
+			pressTimer = null;
+		};
+
+		const doCopy = () => {
+			const text = link.textContent;
+			if (navigator.clipboard) {
+				navigator.clipboard.writeText(text);
+			} else {
+				const ta = document.createElement('textarea');
+				ta.value = text;
+				ta.style.position = 'fixed';
+				ta.style.opacity = '0';
+				document.body.appendChild(ta);
+				ta.select();
+				document.execCommand('copy');
+				document.body.removeChild(ta);
+			}
+		};
+
+
+		const LONGPRESS = window.matchMedia('(hover: none)').matches ? 400 : 500;
+		const start = () => {
+			pressTimer = setTimeout(doCopy, LONGPRESS);
+		};
+		link.addEventListener('touchstart', start);
+		link.addEventListener('mousedown', start);
+		link.addEventListener('touchend', cancel);
+		link.addEventListener('mouseup', cancel);
+		link.addEventListener('touchmove', cancel);
+		link.addEventListener('mouseleave', cancel);
+	}
+})();
+[/code]
+
+[size=7]目的完成，本章完。[/size]
+【________________________________________________________________________________________】
+置顶：是
+日期：2025-11-16
+标题：我的逆向博客搭建完成
+简介：第一篇博客，记录为什么动笔。
+正文：
+[size=6]开始我的逆向博客之旅[/size]
+[quote]欢迎来到我的技术博客！这是我写的第一篇文章，想和大家分享我为什么要开始这个博客。[/quote]
+
+[b]为什么要写博客？[/b]
+
+我说是我闲没事了想建个博客玩你信不
+ヽ(๏~๏)ﾉ
+
+记录学习过程
+
+分享经验，帮助他人
+（其实就是记录一下日常，所以不会经常去更新。）
+
+
+[b]我会些什么？[/b]
+
+[color=#0066cc][i]Smali[/i][/color]、[color=#0066cc][i]Java[/i][/color]等编程语言的修改（是的，只会修改）；擅长Android端APP的逆向。
+
+接下来是代码块，不过只是展示作用
+[code]// 示例代码
+function hello() {
+    console.log("Hello, World!");
+}[/code]
+
+希望这个博客能记录我的成长，也能帮助到有需要的朋友。
+【________________________________________________________________________________________】
+</textarea>
+
+<script>
+
+let posts = [];
+
+document.addEventListener('DOMContentLoaded', () => {
+  const savedTheme = localStorage.getItem('theme') || 'light';
+  document.documentElement.setAttribute('data-theme', savedTheme);
+  const rawText = document.getElementById('articlesData').value;
+  posts = parseArticles(rawText);
+  displayPosts(posts);
+});
+
+
+function parseArticles(text) {
+  const blocks = text.split('【________________________________________________________________________________________】')
+                   .filter(b => b.trim())
+                   .map((block, idx) => {
+                     const date  = (block.match(/日期：(.+)/)   || [, '1970-01-01'])[1].trim();
+                     const title = (block.match(/标题：(.+)/)  || [, '无标题'])[1].trim();
+                     const intro = (block.match(/简介：(.+)/)  || [, ''])[1].trim();
+                     const raw   = (block.match(/正文：([\s\S]+)/) || [, ''])[1].trim();
+                     const top   = (block.match(/置顶：(.+)/)  || [, '否'])[1].trim(); // ★新增
+                     const html  = bbCodeToHtml(raw);
+                     return {
+                       id: idx + 1,
+                       title,
+                       date,
+                       excerpt: intro || raw.slice(0, 60) + (raw.length > 60 ? '…' : ''),
+                       content: `<h1>${title}</h1><p class="post-meta">${date}</p>${html}`,
+                       top: top === '是'
+                     };
+                   });
+  
+  return blocks.sort((a, b) => b.top - a.top);
+}
+
+
+
+function bbCodeToHtml(str) {
+  
+  const codeSlots = [];
+  let tmp = str.replace(/\[code\]([\s\S]*?)\[\/code\]/gi, (_, code) => {
+    const id = `__CODE_${codeSlots.length}__`;
+    codeSlots.push(code);
+    return id;
+  });
+
+  
+  const fontSize = g => 0.625 + parseInt(g, 10) * 0.125;   // 1=0.75  4=1.0  7=1.375
+
+  
+  const rules = [
+    { reg: /\[b\](.*?)\[\/b\]/gis,                    repl: '<strong>$1</strong>' },
+    { reg: /\[i\](.*?)\[\/i\]/gis,                    repl: '<em>$1</em>' },
+    { reg: /\[u\](.*?)\[\/u\]/gis,                    repl: '<span style="text-decoration:underline">$1</span>' },
+    { reg: /\[size=(\d)\](.*?)\[\/size\]/gis,         repl: (_, g, txt) => `<span style="font-size:${fontSize(g)}em">${txt}</span>` },
+    { reg: /\[color=([#\w]+)\](.*?)\[\/color\]/gis,    repl: '<span style="color:$1">$2</span>' },
+    { reg: /\[align=(.*?)\](.*?)\[\/align\]/gis,      repl: '<div style="text-align:$1">$2</div>' },
+    { reg: /\[quote\](.*?)\[\/quote\]/gis,            repl: '<blockquote>$1</blockquote>' },
+    { reg: /\[url=(.*?)\](.*?)\[\/url\]/gis,          repl: '<a href="$1" target="_blank" rel="noreferrer" style="color:#334F67">$2</a>' },
+    { reg: /\[img\](.*?)\[\/img\]/gis,                repl: '<img src="$1" style="max-width:100%;height:auto">' }
+  ];
+  rules.forEach(r => { tmp = tmp.replace(r.reg, r.repl); });
+
+  
+  tmp = tmp.replace(/__CODE_(\d+)__/g, (_, idx) =>
+    `<pre style="background:var(--code-bg);padding:1rem;border-radius:8px;overflow-x:auto"><code>${codeSlots[idx]}</code></pre>`
+  );
+
+  
+  return tmp.split(/\n{2,}/).map(p => `<p>${p.replace(/\n/g, '<br>')}</p>`).join('');
+}
+
+
+function displayPosts(list) {
+  const box = document.getElementById('postList');
+  box.innerHTML = '';
+  list.forEach(p => {
+    const div = document.createElement('div');
+    div.className = 'post-item';
+    div.innerHTML = `
+      <h2 class="post-title"><a href="#" onclick="showPost(${p.id})">${p.title}</a></h2>
+      <div class="post-meta">
+      ${p.date} ${p.top ? '<span style="color:#e55;margin-left:.5em">置顶</span>' : ''}
+      </div>
+    <div class="post-excerpt">${p.excerpt}</div>
+`;
+
+    box.appendChild(div);
+  });
+}
+
+
+function showPost(id) {
+  const p = posts.find(_ => _.id === id);
+  if (!p) return;
+  document.getElementById('postContent').innerHTML = p.content;
+  showPage('post');
+}
+
+
+function showPage(p) {
+  ['home-page','post-page','about-page'].forEach(i => document.getElementById(i).classList.add('hidden'));
+  document.getElementById(p + '-page').classList.remove('hidden');
+}
+
+
+function searchPosts() {
+  const kw = document.getElementById('searchInput').value.trim().toLowerCase();
+  if (!kw) return displayPosts(posts);
+  displayPosts(posts.filter(p =>
+    p.title.toLowerCase().includes(kw) || p.excerpt.toLowerCase().includes(kw)
+  ));
+}
+
+
+function toggleTheme() {
+  const html = document.documentElement;
+  const cur = html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+  html.setAttribute('data-theme', cur);
+  localStorage.setItem('theme', cur);
+}
+</script>
+</body>
+</html>                谨遵法律规定，软件仅供用户交流学习与研究使用，版权归属原版权方所有，版权争议与本人（秋枫）无关，用户本人下载后不能用作商业或非法用途，需在24小时之内删除，否则后果均由用户承担责任。输入“我已知晓并同意”继续。
                 `,
 				confirmText: '确定',
 				needInput: true,
