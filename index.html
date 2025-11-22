@@ -1,6 +1,14 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- 网页小图标 -->
+  <link rel="icon" href="https://icdn.binmt.cc/2511/6921096ddb77c.png" type="image/jpeg" />
+</head>
+
+<meta name="referrer" content="no-referrer" />
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>我的个人博客</title>
@@ -71,7 +79,6 @@ nav { display: flex; justify-content: space-between; align-items: center; }
 footer { text-align: center; padding: 2rem 0; margin-top: 4rem; border-top: 1px solid var(--border-color); color: #888; }
 .hidden { display: none; }
 
-/* ===== 返回首页按钮 ===== */
 .back-home {
   display: inline-flex;
   align-items: center;
@@ -127,25 +134,31 @@ footer { text-align: center; padding: 2rem 0; margin-top: 4rem; border-top: 1px 
     <button class="back-home" onclick="showPage('home')">← 返回首页</button>
   </div>
 
-  <!-- 关于 -->
-  <div id="about-page" class="hidden">
-    <section class="about-section">
-      <img src="https://via.placeholder.com/150" alt="头像" class="avatar">
-      <h1>关于我</h1>
-      <p>欢迎来到我的个人博客！</p>
-      <p>这里记录着我的学习笔记、技术思考和生活感悟。</p>
-      <p>热爱编程，喜欢分享，希望我的文字能给你带来一些启发。</p>
-      <div class="social-links">
-        <a href="#">GitHub</a>
-        <a href="#">Twitter</a>
-        <a href="#">邮箱</a>
-      </div>
-    </section>
-  </div>
+<!-- 关于 -->
+<div id="about-page" class="hidden">
+  <section class="about-section">
+    <!-- 头像 -->
+    <img src="https://download-cdn.cjjd19.com/123-pics/head-pic/1828738612.jpg?v=1&t=4918283197&s=3ca1180948e0a7a0322db05b2ec2bf33&bzc=0&bzs=" alt="头像" class="avatar">
+    <h1>秋枫</h1>
+    <p>秋枫迎人爽，寒雨浸昏阳。</p>
+    <p>欢迎来到我的博客！</p>
+    <p>这是一个热爱逆向、乐于分享的博客</p>
+    <p>希望这个博客能够记录我的成长过程</p>
+    <p>૧(●´৺`●)૭</p>
+
+    <!-- 社交链接 -->
+    <div class="social-links">
+      <a href="https://space.bilibili.com/3546628455664136" target="_blank" rel="noreferrer">哔哩哔哩</a>
+      <a href="https://bbs.binmt.cc/home.php?mod=space&do=profile" target="_blank" rel="noreferrer">MT论坛</a>
+      <a href="mailto:zyk090901@gmail.com">邮箱</a>
+    </div>
+  </section>
+</div>
+
 </main>
 
 <footer>
-  <p>&copy; 2024 我的博客. All rights reserved.</p>
+  <p>&copy; 2025 秋枫Mod. All rights reserved.</p>
 </footer>
 
 <!-- 文章数据源 -->
@@ -201,7 +214,7 @@ Android端比较推荐的多线程下载器是1DM+、ADM
 
 是不是可以写一个油猴使识别到域名是drive.uc.cn就自动替换成fast.uc.cn呢？
 
-于是以下脚本应运而生「[url=https://www.123684.com/s/hPm7jv-XNk63]点击获取[/url]」
+于是以下脚本应运而生
 [code]// ==UserScript==
 // @name         UC加速
 // @namespace    https://qm.qq.com/cgi-bin/qm/qr?k=Cgn8JDSoW7AC96H-zocTiakdOwsw96vR
@@ -213,161 +226,173 @@ Android端比较推荐的多线程下载器是1DM+、ADM
 // @author       秋枫
 // ==/UserScript==
 
-(function () {
-    'use strict';
+(function() {
+	'use strict';
 
-    /* ====== 通用弹窗组件 ====== */
-    function createModal({
-        titleText = '提示',
-        htmlContent = '',
-        confirmText = '确定',
-        inputPlaceholder = '',
-        needInput = false,
-        onConfirm
-    }) {
-        const overlay = document.createElement('div');
-        overlay.style.cssText = `
+
+	function createModal({
+		titleText = '提示',
+		htmlContent = '',
+		confirmText = '确定',
+		inputPlaceholder = '',
+		needInput = false,
+		onConfirm
+	}) {
+		const overlay = document.createElement('div');
+		overlay.style.cssText = `
             position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:99999;
             display:flex;align-items:center;justify-content:center;
         `;
 
-        const box = document.createElement('div');
-        box.style.cssText = `
+		const box = document.createElement('div');
+		box.style.cssText = `
             background:#fff;border-radius:6px;padding:24px 32px;width:360px;
             box-shadow:0 8px 24px rgba(0,0,0,.3);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto;
         `;
 
-        const title = document.createElement('div');
-        title.textContent = titleText;
-        title.style.cssText = 'font-size:18px;font-weight:bold;margin-bottom:12px;';
+		const title = document.createElement('div');
+		title.textContent = titleText;
+		title.style.cssText = 'font-size:18px;font-weight:bold;margin-bottom:12px;';
 
-        const content = document.createElement('div');
-        content.innerHTML = htmlContent;
-        content.style.cssText = 'font-size:14px;color:#333;margin-bottom:16px;line-height:1.5;';
+		const content = document.createElement('div');
+		content.innerHTML = htmlContent;
+		content.style.cssText = 'font-size:14px;color:#333;margin-bottom:16px;line-height:1.5;';
 
-        box.appendChild(title);
-        box.appendChild(content);
+		box.appendChild(title);
+		box.appendChild(content);
 
-        let input;
-        if (needInput) {
-            input = document.createElement('input');
-            input.type = 'text';
-            input.placeholder = inputPlaceholder;
-            input.style.cssText = 'width:100%;padding:8px 10px;border:1px solid #bbb;border-radius:4px;margin-bottom:16px;';
-            box.appendChild(input);
-        }
+		let input;
+		if (needInput) {
+			input = document.createElement('input');
+			input.type = 'text';
+			input.placeholder = inputPlaceholder;
+			input.style.cssText = 'width:100%;padding:8px 10px;border:1px solid #bbb;border-radius:4px;margin-bottom:16px;';
+			box.appendChild(input);
+		}
 
-        const btn = document.createElement('button');
-        btn.textContent = confirmText;
-        btn.style.cssText = `
+		const btn = document.createElement('button');
+		btn.textContent = confirmText;
+		btn.style.cssText = `
             width:100%;padding:10px 0;border:none;border-radius:4px;
             background:#007bff;color:#fff;font-size:15px;cursor:pointer;
         `;
-        btn.onclick = () => {
-            if (needInput && input.value.trim() !== inputPlaceholder) {
-                alert('输入内容不正确，请重新输入！');
-                input.focus();
-                return;
-            }
-            document.body.removeChild(overlay);
-            onConfirm && onConfirm();
-        };
+		btn.onclick = () => {
+			if (needInput && input.value.trim() !== inputPlaceholder) {
+				alert('输入内容不正确，请重新输入！');
+				input.focus();
+				return;
+			}
+			document.body.removeChild(overlay);
+			onConfirm && onConfirm();
+		};
 
-        box.appendChild(btn);
-        overlay.appendChild(box);
-        document.body.appendChild(overlay);
-        if (needInput) input.focus();
-    }
+		box.appendChild(btn);
+		overlay.appendChild(box);
+		document.body.appendChild(overlay);
+		if (needInput) input.focus();
+	}
 
-    /* ====== 主流程 ====== */
-    if (location.hostname === 'drive.uc.cn') {
-        if (!localStorage.getItem('_uc_first_agree')) {
-            createModal({
-                titleText: '使用须知 | Mod By 秋枫',
-                htmlContent: `
+
+	if (location.hostname === 'drive.uc.cn') {
+		if (!localStorage.getItem('_uc_first_agree')) {
+			createModal({
+				titleText: '使用须知 | Mod By 秋枫',
+				htmlContent: `
                     长按复制访问更多资源：：<a id="uc-res-link" href="javascript:;"
                     style="color:#007bff;text-decoration:underline;"
-                    title="长按复制">https://zyk.netlify.app</a><br><br>
+                    title="长按复制">https:
                     谨遵法律规定，软件仅供用户交流学习与研究使用，版权归属原版权方所有，版权争议与本人（秋枫）无关，用户本人下载后不能用作商业或非法用途，需在24小时之内删除，否则后果均由用户承担责任。输入“我已知晓并同意”继续。
                 `,
-                confirmText: '确定',
-                needInput: true,
-                inputPlaceholder: '我已知晓并同意',
-                onConfirm: () => {
-                    bindLongPress();          // 仅绑定长按复制
-                    localStorage.setItem('_uc_first_agree', '1');
-                    location.replace(location.href.replace('drive.uc.cn', 'fast.uc.cn'));
-                }
-            });
-            return;
-        } else {
-            location.replace(location.href.replace('drive.uc.cn', 'fast.uc.cn'));
-            return;
-        }
-    }
+				confirmText: '确定',
+				needInput: true,
+				inputPlaceholder: '我已知晓并同意',
+				onConfirm: () => {
+					bindLongPress();
+					localStorage.setItem('_uc_first_agree', '1');
+					location.replace(location.href.replace('drive.uc.cn', 'fast.uc.cn'));
+				}
+			});
+			return;
+		} else {
+			location.replace(location.href.replace('drive.uc.cn', 'fast.uc.cn'));
+			return;
+		}
+	}
 
-    if (location.hostname === 'fast.uc.cn') {
-        if (!sessionStorage.getItem('_uc_tip_shown')) {
-            sessionStorage.setItem('_uc_tip_shown', '1');
-            setTimeout(() => {
-                createModal({
-                    titleText: '下载提示',
-                    htmlContent: '请使用多线程下载器（如 IDM、Aria2、Motrix 等）进行下载，以获得最佳速度。<br><br>请在你的下载器/浏览器内登录网页版UC浏览器，否则可能下载失败。',
-                    confirmText: '我知道了'
-                });
-            }, 500);
-        }
-    }
+	if (location.hostname === 'fast.uc.cn') {
+		if (!sessionStorage.getItem('_uc_tip_shown')) {
+			sessionStorage.setItem('_uc_tip_shown', '1');
+			setTimeout(() => {
+				createModal({
+					titleText: '下载提示',
+					htmlContent: '请使用多线程下载器（如 IDM、Aria2、Motrix 等）进行下载，以获得最佳速度。<br><br>请在你的下载器
+					confirmText: '我知道了'
+				});
+			}, 500);
+		}
+	}
 
-    /* ====== 辅助：统一把链接/请求换成 fast 域名 ====== */
-    document.addEventListener('click', e => {
-        const a = e.target.closest('a');
-        if (a && a.href && a.href.includes('drive.uc.cn')) {
-            e.preventDefault();
-            location.href = a.href.replace('drive.uc.cn', 'fast.uc.cn');
-        }
-    });
 
-    const OriginalXHR = window.XMLHttpRequest;
-    window.XMLHttpRequest = function () {
-        const xhr = new OriginalXHR();
-        const origOpen = xhr.open;
-        xhr.open = function (method, url, ...args) {
-            if (url.includes('drive.uc.cn')) {
-                url = url.replace('drive.uc.cn', 'fast.uc.cn');
-            }
-            return origOpen.call(this, method, url, ...args);
-        };
-        return xhr;
-    };
+	document.addEventListener('click', e => {
+		const a = e.target.closest('a');
+		if (a && a.href && a.href.includes('drive.uc.cn')) {
+			e.preventDefault();
+			location.href = a.href.replace('drive.uc.cn', 'fast.uc.cn');
+		}
+	});
 
-    /* ====== 长按复制（无弹窗） ====== */
-    function bindLongPress() {
-        const link = document.getElementById('uc-res-link');
-        if (!link) return;
+	const OriginalXHR = window.XMLHttpRequest;
+	window.XMLHttpRequest = function() {
+		const xhr = new OriginalXHR();
+		const origOpen = xhr.open;
+		xhr.open = function(method, url, ...args) {
+			if (url.includes('drive.uc.cn')) {
+				url = url.replace('drive.uc.cn', 'fast.uc.cn');
+			}
+			return origOpen.call(this, method, url, ...args);
+		};
+		return xhr;
+	};
 
-        let pressTimer = null;
-        const cancel = () => { if (pressTimer) clearTimeout(pressTimer); pressTimer = null; };
 
-        const doCopy = () => {
-            const text = link.textContent;
-            if (navigator.clipboard) {
-                navigator.clipboard.writeText(text);
-            } else {
-                const ta = document.createElement('textarea');
-                ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
-                document.body.appendChild(ta); ta.select();
-                document.execCommand('copy'); document.body.removeChild(ta);
-            }
-        };
+	function bindLongPress() {
+		const link = document.getElementById('uc-res-link');
+		if (!link) return;
 
-        /* 仅长按触发 */
-        const LONGPRESS = window.matchMedia('(hover: none)').matches ? 400 : 500;
-        const start = () => { pressTimer = setTimeout(doCopy, LONGPRESS); };
-        link.addEventListener('touchstart', start); link.addEventListener('mousedown', start);
-        link.addEventListener('touchend', cancel);  link.addEventListener('mouseup', cancel);
-        link.addEventListener('touchmove', cancel); link.addEventListener('mouseleave', cancel);
-    }
+		let pressTimer = null;
+		const cancel = () => {
+			if (pressTimer) clearTimeout(pressTimer);
+			pressTimer = null;
+		};
+
+		const doCopy = () => {
+			const text = link.textContent;
+			if (navigator.clipboard) {
+				navigator.clipboard.writeText(text);
+			} else {
+				const ta = document.createElement('textarea');
+				ta.value = text;
+				ta.style.position = 'fixed';
+				ta.style.opacity = '0';
+				document.body.appendChild(ta);
+				ta.select();
+				document.execCommand('copy');
+				document.body.removeChild(ta);
+			}
+		};
+
+
+		const LONGPRESS = window.matchMedia('(hover: none)').matches ? 400 : 500;
+		const start = () => {
+			pressTimer = setTimeout(doCopy, LONGPRESS);
+		};
+		link.addEventListener('touchstart', start);
+		link.addEventListener('mousedown', start);
+		link.addEventListener('touchend', cancel);
+		link.addEventListener('mouseup', cancel);
+		link.addEventListener('touchmove', cancel);
+		link.addEventListener('mouseleave', cancel);
+	}
 })();
 [/code]
 
@@ -383,7 +408,8 @@ Android端比较推荐的多线程下载器是1DM+、ADM
 
 [b]为什么要写博客？[/b]
 
-我说是我闲没事了想建个博客玩你信不ヽ(๏~๏)ﾉ
+我说是我闲没事了想建个博客玩你信不
+ヽ(๏~๏)ﾉ
 
 记录学习过程
 
@@ -406,7 +432,7 @@ function hello() {
 </textarea>
 
 <script>
-/* ---------- 文章数据 ---------- */
+
 let posts = [];
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -417,7 +443,7 @@ document.addEventListener('DOMContentLoaded', () => {
   displayPosts(posts);
 });
 
-/* 解析文章 */
+
 function parseArticles(text) {
   const blocks = text.split('【________________________________________________________________________________________】')
                    .filter(b => b.trim())
@@ -434,17 +460,17 @@ function parseArticles(text) {
                        date,
                        excerpt: intro || raw.slice(0, 60) + (raw.length > 60 ? '…' : ''),
                        content: `<h1>${title}</h1><p class="post-meta">${date}</p>${html}`,
-                       top: top === '是'   // ★布尔值，方便排序
+                       top: top === '是'
                      };
                    });
-  /* 置顶文章放最前 */
+  
   return blocks.sort((a, b) => b.top - a.top);
 }
 
 
-/* BBCode → HTML（代码块内不解析标签） */
+
 function bbCodeToHtml(str) {
-  /* 1. 先把 [code] 整体提出去，用占位符代替 */
+  
   const codeSlots = [];
   let tmp = str.replace(/\[code\]([\s\S]*?)\[\/code\]/gi, (_, code) => {
     const id = `__CODE_${codeSlots.length}__`;
@@ -452,10 +478,10 @@ function bbCodeToHtml(str) {
     return id;
   });
 
-  /* 2. 字号 1~7 线性放大，4=标准 */
+  
   const fontSize = g => 0.625 + parseInt(g, 10) * 0.125;   // 1=0.75  4=1.0  7=1.375
 
-  /* 3. 其余标签 */
+  
   const rules = [
     { reg: /\[b\](.*?)\[\/b\]/gis,                    repl: '<strong>$1</strong>' },
     { reg: /\[i\](.*?)\[\/i\]/gis,                    repl: '<em>$1</em>' },
@@ -469,16 +495,16 @@ function bbCodeToHtml(str) {
   ];
   rules.forEach(r => { tmp = tmp.replace(r.reg, r.repl); });
 
-  /* 4. 把代码块放回来 */
+  
   tmp = tmp.replace(/__CODE_(\d+)__/g, (_, idx) =>
     `<pre style="background:var(--code-bg);padding:1rem;border-radius:8px;overflow-x:auto"><code>${codeSlots[idx]}</code></pre>`
   );
 
-  /* 5. 普通段落 */
+  
   return tmp.split(/\n{2,}/).map(p => `<p>${p.replace(/\n/g, '<br>')}</p>`).join('');
 }
 
-/* 显示文章列表 */
+
 function displayPosts(list) {
   const box = document.getElementById('postList');
   box.innerHTML = '';
@@ -497,7 +523,7 @@ function displayPosts(list) {
   });
 }
 
-/* 显示文章详情 */
+
 function showPost(id) {
   const p = posts.find(_ => _.id === id);
   if (!p) return;
@@ -505,13 +531,13 @@ function showPost(id) {
   showPage('post');
 }
 
-/* 页面切换 */
+
 function showPage(p) {
   ['home-page','post-page','about-page'].forEach(i => document.getElementById(i).classList.add('hidden'));
   document.getElementById(p + '-page').classList.remove('hidden');
 }
 
-/* 搜索 */
+
 function searchPosts() {
   const kw = document.getElementById('searchInput').value.trim().toLowerCase();
   if (!kw) return displayPosts(posts);
@@ -520,7 +546,7 @@ function searchPosts() {
   ));
 }
 
-/* 主题切换 */
+
 function toggleTheme() {
   const html = document.documentElement;
   const cur = html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
