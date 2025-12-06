@@ -157,7 +157,8 @@ footer { text-align: center; padding: 2rem 0; margin-top: 4rem; border-top: 1px 
 </main>
 
 <footer>
-  <p>&copy; 2025 秋枫Mod. All rights reserved.</p>
+  <p>From：秋枫Mod</p>
+  <p>Make By Kimi AI</p>
 </footer>
 
 <!-- 文章数据源 -->
@@ -418,7 +419,7 @@ Android端比较推荐的多线程下载器是1DM+、ADM
 
 [color=#0066cc][i]Smali[/i][/color]、[color=#0066cc][i]Java[/i][/color]等编程语言的修改（是的，只会修改）；擅长Android端APP的逆向。
 
-接下来是代码块，不过只是展示作用
+接下来是代码块，作展示作用
 [code]// 示例代码
 function hello() {
     console.log("Hello, World!");
@@ -426,8 +427,344 @@ function hello() {
 
 希望这个博客能记录我的成长，也能帮助到有需要的朋友。
 【________________________________________________________________________________________】
-</textarea>
+置顶：否
+日期：2025-12-6
+标题：记Audio Jam逆向
+简介：挺有意思的一个APP
+正文：
+[size=6]首先来看看软件的官方介绍
+￣﹁￣[/size]
+[quote]工欲善其事必先利其器，Audiolam为专业乐手的你打造了一款超强的音乐学习工具。
+AI伴奏提取乐器音轨、AB循环片段、调整速度音调...更高效地扒谱、练习歌曲。[/quote]
 
+[b]好像有点打广告的感觉？[/b]
+[size=2]算了算了，这些不重要[/size]
+
+[size=5][color=#ff0000]说正事[/color][/size]
+
+来看APP里的内容，还是挺简洁的
+有一“个BASE”的非会员提示，还有几个PRO功能的标识
+[img]https://icdn.binmt.cc/2512/693396022e2e0.jpg[/img]
+
+一点击会员功能的按钮，就弹弹窗了
+[img]https://icdn.binmt.cc/2512/693396d50d9d8.jpg[/img]
+
+那就搜关键词呗
+资源查询了一下，就找到了
+[img]https://icdn.binmt.cc/2512/69339777e015c.jpg[/img]
+
+复制ID为7f1001d2
+结果一搜就一个字段名
+[img]https://icdn.binmt.cc/2512/693397aa2299e.jpg[/img]
+
+那就继续搜索，搜索结果依旧令人头疼，怎么这么少？
+[img]https://icdn.binmt.cc/2512/69339914b2eb0.jpg[/img]
+
+不过我有好办法，先进去看看是怎么回事，然后就收获了一坨代码
+[code].method private static final ChordOptions$setRecognitionAccuracyHandle(ZLandroid/content/Context;Ljava/lang/String;)V
+    .registers 6
+
+    .line 49
+    const-string v0, "chordBase"
+
+    invoke-static {p2, v0}, Lkotlin/jvm/internal/Intrinsics;->areEqual(Ljava/lang/Object;Ljava/lang/Object;)Z
+
+    move-result v0
+
+    if-nez v0, :cond_2e
+
+    if-nez p0, :cond_2e
+
+    .line 51
+    sget-object p0, Lcom/kirakuapp/aum/ui/pages/app/GlobalData;->INSTANCE:Lcom/kirakuapp/aum/ui/pages/app/GlobalData;
+
+    invoke-virtual {p0}, Lcom/kirakuapp/aum/ui/pages/app/GlobalData;->getProTipDialogParam()Lkotlinx/coroutines/flow/MutableStateFlow;
+
+    move-result-object p0
+
+    .line 398
+    :cond_10
+    invoke-interface {p0}, Lkotlinx/coroutines/flow/MutableStateFlow;->getValue()Ljava/lang/Object;
+
+    move-result-object p2
+
+    .line 399
+    move-object v0, p2
+
+    check-cast v0, Lcom/kirakuapp/aum/ui/pages/app/ProTipDialogParam;
+
+    .line 52
+    new-instance v0, Lcom/kirakuapp/aum/ui/pages/app/ProTipDialogParam;
+
+    .line 53
+    sget v1, Lcom/kirakuapp/aum/R$string;->pro_chord_limit:I
+
+    invoke-virtual {p1, v1}, Landroid/content/Context;->getString(I)Ljava/lang/String;
+
+    move-result-object v1
+
+    const-string v2, "getString(...)"
+
+    invoke-static {v1, v2}, Lkotlin/jvm/internal/Intrinsics;->checkNotNullExpressionValue(Ljava/lang/Object;Ljava/lang/String;)V
+
+    .line 52
+    invoke-direct {v0, v1}, Lcom/kirakuapp/aum/ui/pages/app/ProTipDialogParam;-><init>(Ljava/lang/String;)V
+
+    .line 400
+    invoke-interface {p0, p2, v0}, Lkotlinx/coroutines/flow/MutableStateFlow;->compareAndSet(Ljava/lang/Object;Ljava/lang/Object;)Z
+
+    move-result p2
+
+    if-eqz p2, :cond_10
+
+    return-void
+
+    .line 57
+    :cond_2e
+    sget-object p0, Lcom/kirakuapp/aum/ui/pages/app/GlobalData;->INSTANCE:Lcom/kirakuapp/aum/ui/pages/app/GlobalData;
+
+    invoke-virtual {p0}, Lcom/kirakuapp/aum/ui/pages/app/GlobalData;->getRecognitionAccuracy()Lkotlinx/coroutines/flow/MutableStateFlow;
+
+    move-result-object p0
+
+    .line 403
+    :cond_34
+    invoke-interface {p0}, Lkotlinx/coroutines/flow/MutableStateFlow;->getValue()Ljava/lang/Object;
+
+    move-result-object p1
+
+    .line 404
+    move-object v0, p1
+
+    check-cast v0, Ljava/lang/String;
+
+    .line 405
+    invoke-interface {p0, p1, p2}, Lkotlinx/coroutines/flow/MutableStateFlow;->compareAndSet(Ljava/lang/Object;Ljava/lang/Object;)Z
+
+    move-result p1
+
+    if-eqz p1, :cond_34
+
+    .line 58
+    sget-object p0, Lcom/kirakuapp/aum/utils/StoreUtils;->INSTANCE:Lcom/kirakuapp/aum/utils/StoreUtils;
+
+    invoke-virtual {p0, p2}, Lcom/kirakuapp/aum/utils/StoreUtils;->setRecognitionAccuracy(Ljava/lang/String;)V
+
+    return-void
+.end method[/code]
+看似没什么用，实则就没什么用
+
+[b]还好我慧眼识珠，一眼就看出了猫腻[/b]
+[code]    .line 51
+    sget-object p0, Lcom/kirakuapp/aum/ui/pages/app/GlobalData;->INSTANCE:Lcom/kirakuapp/aum/ui/pages/app/GlobalData;
+
+    invoke-virtual {p0}, Lcom/kirakuapp/aum/ui/pages/app/GlobalData;->getProTipDialogParam()Lkotlinx/coroutines/flow/MutableStateFlow;
+    #方法名翻译：获取会员提示弹窗
+    move-result-object p0[/code]
+不是会员就调用弹窗，那这个方法的调用处肯定有会员判断。
+
+我直直直接就是查调用，查到了10结果
+[img]https://icdn.binmt.cc/2512/69339b74942f5.jpg[/img]
+
+然后我就在第三个结果中找到了我想要的
+[code].method private static final Library$addHandle(Ljava/util/List;Lkotlin/jvm/functions/Function0;Landroid/content/Context;)V
+    .registers 6
+    .annotation system Ldalvik/annotation/Signature;
+        value = {
+            "(",
+            "Ljava/util/List<",
+            "Lcom/kirakuapp/aum/database/MusicModel;",
+            ">;",
+            "Lkotlin/jvm/functions/Function0<",
+            "Lkotlin/Unit;",
+            ">;",
+            "Landroid/content/Context;",
+            ")V"
+        }
+    .end annotation
+
+    .line 67
+    sget-object v0, Lcom/kirakuapp/aum/ui/pages/app/GlobalData;->INSTANCE:Lcom/kirakuapp/aum/ui/pages/app/GlobalData;
+
+    invoke-virtual {v0}, Lcom/kirakuapp/aum/ui/pages/app/GlobalData;->isPro()Lkotlinx/coroutines/flow/MutableStateFlow;
+
+    move-result-object v0
+
+    invoke-interface {v0}, Lkotlinx/coroutines/flow/MutableStateFlow;->getValue()Ljava/lang/Object;
+
+    move-result-object v0
+
+    check-cast v0, Ljava/lang/Boolean;
+
+    invoke-virtual {v0}, Ljava/lang/Boolean;->booleanValue()Z
+
+    move-result v0
+
+    if-nez v0, :cond_3d
+
+    invoke-interface {p0}, Ljava/util/List;->size()I
+
+    move-result p0
+
+    const/4 v0, 0x3
+
+    if-lt p0, v0, :cond_3d
+
+    .line 68
+    sget-object p0, Lcom/kirakuapp/aum/ui/pages/app/GlobalData;->INSTANCE:Lcom/kirakuapp/aum/ui/pages/app/GlobalData;
+
+    invoke-virtual {p0}, Lcom/kirakuapp/aum/ui/pages/app/GlobalData;->getProTipDialogParam()Lkotlinx/coroutines/flow/MutableStateFlow;
+
+    move-result-object p0
+
+    .line 271
+    :cond_1f
+    invoke-interface {p0}, Lkotlinx/coroutines/flow/MutableStateFlow;->getValue()Ljava/lang/Object;
+
+    move-result-object p1
+
+    .line 272
+    move-object v0, p1
+
+    check-cast v0, Lcom/kirakuapp/aum/ui/pages/app/ProTipDialogParam;
+
+    .line 69
+    new-instance v0, Lcom/kirakuapp/aum/ui/pages/app/ProTipDialogParam;
+
+    .line 70
+    sget v1, Lcom/kirakuapp/aum/R$string;->pro_project_limit:I
+
+    invoke-virtual {p2, v1}, Landroid/content/Context;->getString(I)Ljava/lang/String;
+
+    move-result-object v1
+
+    const-string v2, "getString(...)"
+
+    invoke-static {v1, v2}, Lkotlin/jvm/internal/Intrinsics;->checkNotNullExpressionValue(Ljava/lang/Object;Ljava/lang/String;)V
+
+    .line 69
+    invoke-direct {v0, v1}, Lcom/kirakuapp/aum/ui/pages/app/ProTipDialogParam;-><init>(Ljava/lang/String;)V
+
+    .line 273
+    invoke-interface {p0, p1, v0}, Lkotlinx/coroutines/flow/MutableStateFlow;->compareAndSet(Ljava/lang/Object;Ljava/lang/Object;)Z
+
+    move-result p1
+
+    if-eqz p1, :cond_1f
+
+    return-void
+
+    .line 74
+    :cond_3d
+    invoke-interface {p1}, Lkotlin/jvm/functions/Function0;->invoke()Ljava/lang/Object;
+
+    return-void
+.end method[/code]
+直接找到了一个大大的[b]isPro[/b]方法
+可真费劲
+[code]invoke-virtual {v0}, Lcom/kirakuapp/aum/ui/pages/app/GlobalData;->isPro()Lkotlinx/coroutines/flow/MutableStateFlow;[/code]
+
+[size=6]不过下面才是重点[/size]
+[code].method public final isPro()Lkotlinx/coroutines/flow/MutableStateFlow;
+    .registers 2
+    .annotation system Ldalvik/annotation/Signature;
+        value = {
+            "()",
+            "Lkotlinx/coroutines/flow/MutableStateFlow<",
+            "Ljava/lang/Boolean;",
+            ">;"
+        }
+    .end annotation
+
+    .line 20
+    sget-object v0, Lcom/kirakuapp/aum/ui/pages/app/GlobalData;->isPro:Lkotlinx/coroutines/flow/MutableStateFlow;
+
+    return-object v0
+.end method[/code]
+看代码我们发现这个方法是object类型返回值，和一般的Z类型返回值不太一样
+
+那要怎么赋值呢？꒰ *•ɷ•* ꒱
+
+仔细看，这个方法的返回值来自isPro字段，那我们从这个字段入手试试
+我们不知道怎么赋值，就“问”开发者，直接差调用
+[img]https://icdn.binmt.cc/2512/69339dbb3a63c.jpg[/img]
+
+一个结果，我们进去看。
+
+为了让你们能看懂，所以我为每句代码都加上了注释ε٩(๑> ₃ <)۶з
+[code].method static constructor <clinit>()V
+    .registers 4
+
+    #此处省略其他代码
+    const/4 v1, 0x0
+    #为v1赋值0
+    .line 42
+    invoke-static {v1}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+    #将v1的值转换Int类型的I类型值
+    move-result-object v2
+    #将v1转换后的值给v2
+    .line 20
+    invoke-static {v1}, Ljava/lang/Boolean;->valueOf(Z)Ljava/lang/Boolean;
+    #将v2的值转换Int类型的Z类型值
+    move-result-object v1
+    #将v2转换后的值给v1
+    invoke-static {v1}, Lkotlinx/coroutines/flow/StateFlowKt;->MutableStateFlow(Ljava/lang/Object;)Lkotlinx/coroutines/flow/MutableStateFlow;
+    #引用自定义类型MutableStateFlow将v1转换为指定类型值
+    #你可以理解为为v1的值加上密码，只有指定的人能看懂
+    move-result-object v3
+    #将v1的值给v3
+    sput-object v3, Lcom/kirakuapp/aum/ui/pages/app/GlobalData;->isPro:Lkotlinx/coroutines/flow/MutableStateFlow;
+    #使用put指令将v3的值存入字段isPro
+
+    #此处省略亿点代码
+    return-void
+.end method[/code]
+
+现在可以看明白了
+整个过程就是赋值→转换→赋值→再转换→继续转换→存入
+
+那么赋值的方法也就明白了，直接有样学样
+[code].method public final isPro()Lkotlinx/coroutines/flow/MutableStateFlow;
+    .registers 2
+    .annotation system Ldalvik/annotation/Signature;
+        value = {
+            "()",
+            "Lkotlinx/coroutines/flow/MutableStateFlow<",
+            "Ljava/lang/Boolean;",
+            ">;"
+        }
+    .end annotation
+
+    const/4 v0, 0x1
+
+    invoke-static {v0}, Ljava/lang/Boolean;->valueOf(Z)Ljava/lang/Boolean;
+
+    move-result-object v0
+
+    invoke-static {v0}, Lkotlinx/coroutines/flow/StateFlowKt;->MutableStateFlow(Ljava/lang/Object;)Lkotlinx/coroutines/flow/MutableStateFlow;
+
+    move-result-object v0
+
+    return-object v0
+.end method[/code]
+看结果
+[img]https://icdn.binmt.cc/2512/6933a220107af.jpg[/img]
+
+目的已经达成，但是时间显示还是有点不美观
+
+[size=6]那就改！[/size]
+
+累了，不说了，以图代文吧(눈‸눈)
+[img]https://icdn.binmt.cc/2512/6933a325680ca.jpg[/img]
+[img]https://icdn.binmt.cc/2512/6933a322ad8e4.jpg[/img]
+[img]https://icdn.binmt.cc/2512/6933a3271fcf1.jpg[/img]
+[img]https://icdn.binmt.cc/2512/6933a326b0883.jpg[/img]
+[img]https://icdn.binmt.cc/2512/6933a326eb502.jpg[/img]
+
+
+[size=7][b]完[/b][/size]
+【________________________________________________________________________________________】
+</textarea>
 <script>
 
 let posts = [];
@@ -552,4 +889,4 @@ function toggleTheme() {
 }
 </script>
 </body>
-	</html>
+</html>
